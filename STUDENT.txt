@@ -1,0 +1,15 @@
+Nama: Naufal Arsyaputra Pradana
+Email: 111202214606@mhs.dinus.ac.id
+API Digunakan: Dicoding Story API
+Base URL: https://story-api.dicoding.dev/v1
+
+Map Service: 
+- OpenStreetMap (tidak memerlukan API key)
+- MapTiler API KEY:(WlHVW3GmIbcYKHpoc75N)
+
+Leaflet Plugins:
+- Leaflet.Control.Geocoder
+- Leaflet.LocateControl
+- Leaflet.vectorGrid
+
+Deploy URL: https://<your-deployment-url>

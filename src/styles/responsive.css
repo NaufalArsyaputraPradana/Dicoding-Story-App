@@ -1,0 +1,252 @@
+/* Mobile First Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .main-header {
+    padding: 0.5rem 0;
+  }
+
+  .brand-name {
+    font-size: 1.2rem;
+  }
+
+  .story-item {
+    margin-bottom: 1rem;
+  }
+
+  .story-image-container {
+    height: 180px;
+  }
+
+  .story-content {
+    padding: 1rem;
+  }
+
+  .auth-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .story-form {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .story-detail-content {
+    padding: 1rem;
+  }
+
+  .back-link {
+    padding: 0.6rem 1rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .profile-avatar {
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+  }
+
+  .profile-stats {
+    padding: 1rem;
+  }
+
+  .stat-count {
+    font-size: 1.5rem;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .profile-action-button {
+    min-width: 100%;
+  }
+
+  .login-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-name {
+    font-size: 1rem;
+  }
+
+  .drawer-button {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+
+  .navigation-drawer {
+    width: 80%;
+  }
+
+  .story-description {
+    -webkit-line-clamp: 2;
+  }
+
+  .auth-form-group input,
+  .form-group textarea {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .auth-submit-button,
+  .submit-button {
+    padding: 0.6rem;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-avatar .avatar-initials {
+    font-size: 2rem;
+  }
+
+  .profile-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .profile-setting-item {
+    padding: 0.75rem;
+  }
+
+  .login-required,
+  .error-container {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Tablet Landscape */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .stories-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .story-image {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Print Styles */
+@media print {
+  header,
+  footer,
+  .drawer-button,
+  .story-actions {
+    display: none !important;
+  }
+
+  .story-item {
+    break-inside: avoid;
+    margin-bottom: 1cm;
+  }
+
+  .story-image {
+    max-height: 5cm;
+  }
+
+  body {
+    background: none;
+    color: black;
+    font-size: 12pt;
+  }
+}
+
+/* Enhanced Responsive sidebar styles */
+@media (max-width: 576px) {
+  .sidebar-toggle {
+    top: 0.75rem;
+    left: 0.75rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .sidebar {
+    width: 250px;
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+  }
+
+  .sidebar-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sidebar-title {
+    font-size: 1rem;
+  }
+
+  .sidebar-user-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .sidebar-user-avatar .avatar-initials {
+    font-size: 1.5rem;
+  }
+
+  .sidebar-auth-buttons {
+    flex-direction: column;
+  }
+
+  .sidebar-link {
+    padding: 0.7rem 1rem;
+  }
+
+  .sidebar-link i {
+    margin-right: 0.6rem;
+  }
+}
+
+@media (min-width: 992px) {
+  /* Optional: Make room for sidebar toggle */
+  .main-content {
+    padding-left: 60px;
+  }
+}
+
+/* Add animation for sidebar open */
+@media (min-width: 768px) {
+  .sidebar.open {
+    animation: slideSidebarIn 0.3s forwards;
+  }
+
+  @keyframes slideSidebarIn {
+    from {
+      transform: translateX(-20px);
+      opacity: 0.8;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}
