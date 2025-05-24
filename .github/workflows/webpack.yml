@@ -1,4 +1,4 @@
-name: NodeJS
+name: NodeJS with Webpack
 
 on:
   push:
@@ -24,4 +24,4 @@ jobs:
 
     - name: Build
       run: |
-        npm install
+        npm install -D webpack-cli
