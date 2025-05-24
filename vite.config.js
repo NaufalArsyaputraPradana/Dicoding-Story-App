@@ -12,7 +12,7 @@ export default defineConfig(({ command }) => {
     base: base,
     publicDir: resolve(__dirname, 'src', 'public'), // Ensure public assets are served
   build: {
-    outDir: '../dist',
+    outDir: 'dist',
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
