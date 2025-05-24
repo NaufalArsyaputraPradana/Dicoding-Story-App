@@ -27,6 +27,12 @@ var U=r=>{throw TypeError(r)};var k=(r,e,t)=>e.has(r)||U("Cannot "+t);var g=(r,e
                         Add Story
                       </a>
                     </li>
+                    <li>
+                      <a href="#/stories/saved" class="${window.location.hash==="#/saved"?"active":""}" aria-current="${window.location.hash==="#/stories/saved"?"page":"false"}">
+                        <i class="fas fa-database" aria-hidden="true"></i>
+                        Saved Stories
+                      </a>
+                    </li>
                     <li class="user-menu">
                       <div class="user-info" tabindex="0" aria-haspopup="true" aria-expanded="false">
                         <div class="user-avatar" aria-hidden="true">${re(t==null?void 0:t.name)}</div>
@@ -882,4 +888,4 @@ var U=r=>{throw TypeError(r)};var k=(r,e,t)=>e.has(r)||U("Cannot "+t);var g=(r,e
           <span>${o==="dark"?"Light Mode":"Dark Mode"}</span>
         </button>
       `;const a=e.children[1];a?e.insertBefore(t,a.nextSibling):e.appendChild(t);const i=document.getElementById("theme-toggle");i&&i.addEventListener("click",je)}}function je(){const e=(document.documentElement.getAttribute("data-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e);const t=document.getElementById("theme-toggle");if(t){const o=t.querySelector("i"),a=t.querySelector("span");o&&(o.className=`fas ${e==="dark"?"fa-sun":"fa-moon"}`),a&&(a.textContent=e==="dark"?"Light Mode":"Dark Mode")}window.showToast&&window.showToast(`Switched to ${e==="dark"?"dark":"light"} mode`,"info")}function J(){const r=()=>{document.querySelectorAll(".story-item, .page-title, .story-form, .auth-container").forEach(o=>{const a=o.getBoundingClientRect();if(a.top<=(window.innerHeight||document.documentElement.clientHeight)*.85&&a.bottom>=0)if(o.classList.add("visible"),o.classList.contains("story-item")){o.classList.add("animate__animated","animate__fadeInUp");const s=Array.from(o.parentNode.children).indexOf(o);o.style.animationDelay=`${s*.1}s`}else o.classList.contains("page-title")?o.classList.add("animate__animated","animate__fadeInDown"):o.classList.add("animate__animated","animate__fadeIn")})};setTimeout(r,100);let e;window.addEventListener("scroll",()=>{clearTimeout(e),e=setTimeout(r,20)})}document.addEventListener("DOMContentLoaded",He);
-//# sourceMappingURL=main-5lWsfGni.js.map
+//# sourceMappingURL=main-DnWRq_bF.js.map
