@@ -4,9 +4,13 @@ import { VitePWA } from 'vite-plugin-pwa';
 import manifest from './src/manifest.json';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  root: 'src',
-  publicDir: resolve(__dirname, 'src', 'public'), // Ensure public assets are served
+export default defineConfig(({ command }) => {
+  const repoName = 'Dicoding-Story-App';
+  const base = command === 'build' ? '/' : `/${repoName}/`;
+  return {
+    root: 'src',
+    base: base,
+    publicDir: resolve(__dirname, 'src', 'public'), // Ensure public assets are served
   build: {
     outDir: '../dist',
     emptyOutDir: true,
@@ -68,5 +72,6 @@ export default defineConfig({
         ],
       },
     }),
-  ],
+    ],
+  };
 });
