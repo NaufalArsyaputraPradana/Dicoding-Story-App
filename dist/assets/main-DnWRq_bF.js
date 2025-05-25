@@ -28,7 +28,7 @@ var U=r=>{throw TypeError(r)};var k=(r,e,t)=>e.has(r)||U("Cannot "+t);var g=(r,e
                       </a>
                     </li>
                     <li>
-                      <a href="#/stories/saved" class="${window.location.hash==="#/saved"?"active":""}" aria-current="${window.location.hash==="#/stories/saved"?"page":"false"}">
+                      <a href="#/saved" class="${window.location.hash==="#/saved"?"active":""}" aria-current="${window.location.hash==="#/saved"?"page":"false"}">
                         <i class="fas fa-database" aria-hidden="true"></i>
                         Saved Stories
                       </a>
