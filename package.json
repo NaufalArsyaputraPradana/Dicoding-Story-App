@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "npm run build && gh-pages -d dist"
   },
-  "homepage": "https://<username>.github.io/<repository-name>",
+  "homepage": "https://naufalarsyaputrapradana.github.io/Dicoding-Story-App",
   "devDependencies": {
     "gh-pages": "^6.3.0",
     "prettier": "^3.5.3",
