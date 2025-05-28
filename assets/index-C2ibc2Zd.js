@@ -245,7 +245,7 @@ async function initializeApp() {
     installContainer.classList.add('install-prompt');
     installContainer.innerHTML = `
       <div class="install-content">
-        <img src="/images/icon-192x192.png" alt="App icon" width="48" height="48">
+        <img src="/images/logo.png" alt="App icon" width="48" height="48">
         <div class="install-text">
           <h3>Install Dicoding Story</h3>
           <p>Install aplikasi ini untuk pengalaman offline yang lebih baik!</p>
