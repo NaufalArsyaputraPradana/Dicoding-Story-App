@@ -8,7 +8,6 @@ const urlsToCache = [
   '/manifest.json',
   '/favicon.png',
   '/images/logo.png',
-  '/images/icon-192x192.png',
   '/styles/styles.css',
   '/styles/responsive.css',
   '/scripts/index.js',
@@ -104,8 +103,8 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: notificationData.body || 'New content available',
-    icon: '/images/icon-192x192.png',
-    badge: '/images/icon-192x192.png',
+    icon: '/images/logo.png',
+    badge: '/images/logo.png',
     vibrate: [100, 50, 100],
     data: {
       url: notificationData.url || '/',

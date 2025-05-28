@@ -69,11 +69,7 @@ class AppSidebar extends HTMLElement {
   _render() {
     this.innerHTML = `
       <div class="sidebar-container">
-        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
-          <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        
-        <div id="sidebar" class="sidebar">
+        <div id="sidebar" class="sidebar position-fixed">
           <div class="sidebar-header">
             <img src="./images/logo.png" alt="Dicoding Story Logo" class="sidebar-logo">
             <h2 class="sidebar-title">Dicoding Story</h2>

@@ -14,7 +14,6 @@ const urlsToCache = [
   '/scripts/index.js',
   '/favicon.png',
   '/images/logo.png',
-  '/images/icon-192x192.png',
   '/images/icon-512x512.png',
   '/images/maskable_icon.png',
   '/manifest.json',
@@ -381,7 +380,7 @@ async function processPostQueue() {
         // Show a notification
         self.registration.showNotification('Story Posted', {
           body: 'Your offline story has been successfully posted!',
-          icon: '/images/icon-192x192.png',
+          icon: '/images/logo.png',
           vibrate: [200, 100, 200],
         });
 
@@ -426,7 +425,7 @@ self.addEventListener('push', (event) => {
 
     const options = {
       body: data.options?.body || 'Ada pemberitahuan baru dari Dicoding Story',
-      icon: '/images/icon-192x192.png',
+      icon: '/images/logo.png',
       badge: '/images/favicon.png',
       vibrate: [100, 50, 100, 50, 100],
       data: {

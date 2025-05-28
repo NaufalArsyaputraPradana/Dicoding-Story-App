@@ -75,13 +75,6 @@ class AppHeader extends HTMLElement {
                           </button>
                         </li>
                         <li role="none">
-                          <button id="theme-toggle" class="dropdown-button" role="menuitem">
-                            <i class="fas fa-moon" aria-hidden="true"></i>
-                            <span>Dark Mode</span>
-                          </button>
-                        </li>
-                        <li role="none" class="dropdown-divider"></li>
-                        <li role="none">
                           <button id="logout-button" class="dropdown-button logout-button" role="menuitem">
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                             Logout

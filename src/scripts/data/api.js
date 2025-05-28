@@ -383,7 +383,6 @@ class DicodingStoryApi {
         window.location.hostname === 'localhost' ||
         window.location.hostname === '127.0.0.1';
 
-      // In development, return mock success response to avoid CORS issues
       if (isDev) {
         console.log(
           'Development environment detected - skipping actual notification unsubscribe request'
@@ -402,9 +401,9 @@ class DicodingStoryApi {
         };
       }
 
-      // In production, make the actual request
+      //  endpoint di sini:
       const result = await this._fetchWithTimeout(
-        `${CONFIG.BASE_URL}/notifications/unsubscribe`,
+        `${CONFIG.BASE_URL}/notifications/subscribe`,
         {
           method: 'DELETE',
           headers: {

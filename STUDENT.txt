@@ -12,4 +12,4 @@ Leaflet Plugins:
 - Leaflet.LocateControl
 - Leaflet.vectorGrid
 
-Deploy URL: https://<your-deployment-url>
+Deploy URL: "https://naufalarsyaputrapradana.github.io/Dicoding-Story-App"

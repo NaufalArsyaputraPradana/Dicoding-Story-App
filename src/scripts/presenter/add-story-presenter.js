@@ -569,7 +569,7 @@ class AddStoryPresenter {
         maxZoom: 19,
       }).addTo(this._map);
 
-      // Perbaiki tampilan peta setelah dirender
+      //  tampilan peta setelah dirender
       setTimeout(() => {
         if (this._map) {
           console.log('Invalidating map size');

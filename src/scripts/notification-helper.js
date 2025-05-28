@@ -14,18 +14,28 @@ export async function subscribeUserToPush(registration) {
       console.log('Push notification permission denied');
       return;
     }
+    const token = localStorage.getItem('token'); // Ambil token user
+    if (!token) {
+      console.warn(
+        'User not logged in, cannot subscribe to push notifications'
+      );
+      return;
+    }
     const applicationServerKey = urlBase64ToUint8Array(CONFIG.VAPID_PUBLIC_KEY);
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey,
     });
-    // Send subscription to backend API
-    await fetch(`${CONFIG.BASE_URL}/subscribe`, {
+    const { endpoint, keys } = subscription.toJSON();
+    const cleanSubscription = { endpoint, keys };
+
+    await fetch(`${CONFIG.BASE_URL}/notifications/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(subscription),
+      body: JSON.stringify(cleanSubscription),
     });
     console.log('User subscribed to push notifications');
   } catch (error) {
