@@ -1,7 +1,7 @@
 import '../styles/styles.css';
-import App from './app';
+import App from './pages/app';
 import CONFIG from './config';
-import { subscribeUserToPush } from './notification-helper';
+import { subscribeUserToPush } from './utils/notification-helper';
 
 // Create and show splash screen
 function showSplashScreen() {
