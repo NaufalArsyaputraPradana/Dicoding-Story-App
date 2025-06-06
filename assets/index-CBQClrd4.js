@@ -73,15 +73,13 @@ if ('serviceWorker' in navigator) {
           'ServiceWorker registration successful with scope: ',
           registration.scope
         );
-        window.showToast &&
-          window.showToast('Aplikasi siap digunakan secara offline', 'success');
+        window.showToast && window.showToast('Aplikasi siap digunakan secara offline', 'success');
         // Subscribe to push notifications
         subscribeUserToPush(registration);
       })
       .catch((err) => {
         console.error('ServiceWorker registration failed: ', err);
-        window.showToast &&
-          window.showToast('Gagal mendaftarkan service worker', 'error');
+        window.showToast && window.showToast('Gagal mendaftarkan service worker', 'error');
       });
   });
 }
@@ -180,8 +178,7 @@ async function initializeApp() {
         </section>
       `;
 
-      window.showToast &&
-        window.showToast('Gagal memuat halaman, silakan coba lagi', 'error');
+      window.showToast && window.showToast('Gagal memuat halaman, silakan coba lagi', 'error');
     }
 
     window.addEventListener('hashchange', async () => {
@@ -278,8 +275,7 @@ async function initializeApp() {
           deferredPrompt.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
               console.log('User accepted the install prompt');
-              window.showToast &&
-                window.showToast('Aplikasi sedang diinstall!', 'success');
+              window.showToast && window.showToast('Aplikasi sedang diinstall!', 'success');
             } else {
               console.log('User dismissed the install prompt');
             }
