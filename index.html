@@ -1,20 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="description" content="Aplikasi berbagi cerita pengalaman belajar di Dicoding dengan fitur modern dan responsif" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+    />
+    <meta
+      name="description"
+      content="Aplikasi berbagi cerita pengalaman belajar di Dicoding dengan fitur modern dan responsif"
+    />
     <meta name="theme-color" content="#4361ee" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
-    <link rel="manifest" href="/Dicoding-Story-App/assets/manifest-D8dwRIX_.json" />
+    <link rel="manifest" href="/Dicoding-Story-App/assets/manifest-BYrDdnwR.json" />
     <link rel="shortcut icon" href="./favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="./images/logo.png" />
 
     <!-- Preload critical CSS and JS -->
-    <link rel="preload" href="/Dicoding-Story-App/assets/index-CBQClrd4.js" as="script" crossorigin />
+    <link rel="preload" href="/Dicoding-Story-App/assets/index-C-ysaSGN.js" as="script" crossorigin />
 
     <!-- Preconnect for fonts and CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,25 +32,69 @@
     <title>Dicoding Story | Berbagi Cerita Belajar</title>
 
     <!-- Inline critical CSS -->
-    <!-- Main CSS -->
 
     <!-- External CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <script type="module" crossorigin src="/Dicoding-Story-App/assets/main-CWHRJiza.js"></script>
-    <link rel="stylesheet" crossorigin href="/Dicoding-Story-App/assets/main-D5iXBnoP.css">
+    <!-- Fallback untuk non-JS -->
+    <noscript>
+      <style>
+        #app {
+          display: none;
+        }
+        .no-js-message {
+          display: block;
+          color: #b71c1c;
+          padding: 2rem;
+          text-align: center;
+        }
+      </style>
+    </noscript>
+    <script type="module" crossorigin src="/Dicoding-Story-App/assets/main-CtBsCFfp.js"></script>
+    <link rel="stylesheet" crossorigin href="/Dicoding-Story-App/assets/main-CPaBqRr8.css">
   <link rel="manifest" href="/Dicoding-Story-App/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/Dicoding-Story-App/registerSW.js"></script></head>
   <body>
+    <noscript>
+      <div class="no-js-message">
+        <strong>JavaScript diperlukan untuk menjalankan aplikasi ini.</strong>
+      </div>
+    </noscript>
     <a href="#main-content" class="skip-link">Langsung ke konten utama</a>
-    <div id="connection-status" class="connection-status hidden" aria-live="polite" role="status">
+    <div
+      id="connection-status"
+      class="connection-status hidden"
+      aria-live="polite"
+      role="status"
+    >
       <i class="fas fa-wifi-slash" aria-hidden="true"></i>
       <span id="connection-message">Anda sedang offline</span>
     </div>
@@ -51,12 +104,30 @@
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
     <!-- Defer non-critical JavaScript -->
-    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"
+    ></script>
     <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script defer src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <script defer src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
-    <script defer src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
-    <script defer src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script>
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"
+    ></script>
   </body>
 </html>

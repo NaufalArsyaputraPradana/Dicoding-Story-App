@@ -6,15 +6,29 @@
     <title>Offline - Dicoding Story</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       :root {
         --primary: #4361ee;
         --primary-dark: #3a56d4;
         --light: #f8f9fa;
         --dark: #212529;
-        --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
       }
       body {
         font-family: 'Poppins', sans-serif;
@@ -40,8 +54,15 @@
         font-weight: 700;
         color: var(--primary);
         text-decoration: none;
+        transition: color 0.2s;
       }
-      .brand img { height: 32px; width: 32px; }
+      .brand:hover {
+        color: var(--primary-dark);
+      }
+      .brand img {
+        height: 32px;
+        width: 32px;
+      }
       .offline-container {
         flex: 1;
         display: flex;
@@ -54,29 +75,50 @@
       .offline-card {
         background: white;
         border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         padding: 2.5rem;
         max-width: 600px;
         width: 100%;
         animation: fadeIn 0.5s;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px);}
-        to { opacity: 1; transform: translateY(0);}
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .offline-icon {
         font-size: 3.5rem;
         color: var(--primary);
         margin-bottom: 1.5rem;
-        background: rgba(67,97,238,0.1);
-        width: 100px; height: 100px; line-height: 100px;
+        background: rgba(67, 97, 238, 0.1);
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
         border-radius: 50%;
         display: inline-block;
       }
-      h1 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);}
-      p { font-size: 1rem; max-width: 500px; margin: 0 auto 2rem; color: #666; line-height: 1.6;}
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+      }
+      p {
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 2rem;
+        color: #666;
+        line-height: 1.6;
+      }
       .actions {
-        display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
       }
       .back-button {
         background: var(--primary);
@@ -93,10 +135,14 @@
         align-items: center;
         gap: 0.5rem;
       }
+      .back-button:focus {
+        outline: 2px solid var(--primary-dark);
+        outline-offset: 2px;
+      }
       .back-button:hover {
         background: var(--primary-dark);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(67,97,238,0.25);
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
       }
       .back-button.secondary {
         background: transparent;
@@ -104,7 +150,18 @@
         color: var(--primary);
       }
       .back-button.secondary:hover {
-        background: rgba(67,97,238,0.1);
+        background: rgba(67, 97, 238, 0.1);
+      }
+      .tips {
+        margin-top: 2rem;
+        color: #888;
+        font-size: 0.95rem;
+        background: #f1f3fa;
+        border-radius: 8px;
+        padding: 1rem;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
       }
       .footer {
         text-align: center;
@@ -115,29 +172,54 @@
         border-top: 1px solid #eee;
       }
       @media (max-width: 600px) {
-        .offline-card { padding: 1.5rem; }
-        .offline-icon { font-size: 2.5rem; width: 80px; height: 80px; line-height: 80px;}
-        h1 { font-size: 1.5rem; }
+        .offline-card {
+          padding: 1.5rem;
+        }
+        .offline-icon {
+          font-size: 2.5rem;
+          width: 80px;
+          height: 80px;
+          line-height: 80px;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
       }
     </style>
   </head>
   <body>
     <header class="header">
-      <a href="/" class="brand">
+      <a href="/" class="brand" tabindex="0">
         <img src="/images/logo.png" alt="Dicoding Story Logo" />
         Dicoding Story
       </a>
     </header>
-    <div class="offline-container">
+    <div class="offline-container" role="main" aria-labelledby="offline-title">
       <div class="offline-card">
-        <div class="offline-icon">
+        <div class="offline-icon" aria-hidden="true">
           <i class="fas fa-wifi-slash"></i>
         </div>
-        <h1>Anda Sedang Offline</h1>
-        <p>Sepertinya koneksi internet Anda bermasalah. Silakan periksa koneksi dan coba lagi.</p>
+        <h1 id="offline-title">Anda Sedang Offline</h1>
+        <p>
+          Sepertinya koneksi internet Anda bermasalah.<br />Silakan periksa
+          koneksi dan coba lagi.
+        </p>
         <div class="actions">
-          <a href="/" class="back-button"><i class="fas fa-sync-alt"></i> Coba Lagi</a>
-          <a href="/" class="back-button secondary"><i class="fas fa-home"></i> Kembali ke Beranda</a>
+          <a href="/" class="back-button" aria-label="Coba Lagi"
+            ><i class="fas fa-sync-alt"></i> Coba Lagi</a
+          >
+          <a
+            href="/"
+            class="back-button secondary"
+            aria-label="Kembali ke Beranda"
+            ><i class="fas fa-home"></i> Kembali ke Beranda</a
+          >
+        </div>
+        <div class="tips">
+          <strong>Tips:</strong> Pastikan perangkat Anda terhubung ke
+          internet.<br />
+          Jika masalah berlanjut, coba refresh halaman atau buka aplikasi di
+          lain waktu.
         </div>
       </div>
     </div>
