@@ -27,14 +27,14 @@
   --dark-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Dark Mode Settings */
+/* Dark Mode Settings - Applies when system preference is dark */
 @media (prefers-color-scheme: dark) {
   :root {
     --light: var(--dark-bg);
     --dark: var(--dark-text);
     --white: var(--dark-surface);
     --shadow: var(--dark-shadow);
-    color-scheme: dark;
+    color-scheme: dark; /* Indicate dark color scheme to browser */
   }
 
   body {
@@ -93,6 +93,7 @@
   }
 }
 
+/* Global Resets */
 * {
   margin: 0;
   padding: 0;
@@ -115,7 +116,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Improved page transitions */
+/* Page Transitions */
 .page-transition {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -144,7 +145,7 @@ body {
   padding: 0 1.5rem;
 }
 
-/* Enhanced Header Styles */
+/* Header Styles */
 header {
   background-color: var(--white);
   box-shadow: var(--shadow);
@@ -195,7 +196,7 @@ header.scrolled {
   transform: rotate(10deg);
 }
 
-/* Stories List Enhancements */
+/* Stories List & Item Styles (Consolidated) */
 .stories-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -207,14 +208,18 @@ header.scrolled {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Consolidated transition properties */
+  transition:
+    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.5s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   position: relative;
   transform: translateY(20px);
   opacity: 0;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  will-change: transform, box-shadow, opacity;
+  will-change: transform, box-shadow, opacity; /* Optimization for animations */
 }
 
 app-card.visible .story-item {
@@ -223,12 +228,12 @@ app-card.visible .story-item {
 }
 
 .story-item:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px) scale(1.02); /* Adjusted scale for a more cohesive effect */
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   border-color: rgba(67, 97, 238, 0.2);
 }
 
-/* Enhanced Image Styles */
+/* Image Styles for Story Item */
 .story-image-container {
   height: 200px;
   overflow: hidden;
@@ -267,7 +272,7 @@ app-card.visible .story-item {
   opacity: 1;
 }
 
-/* Enhanced form inputs */
+/* Consolidated Form Input Styles */
 .auth-form-group input,
 .form-group textarea,
 .form-control {
@@ -278,6 +283,7 @@ app-card.visible .story-item {
   transition: all 0.3s ease;
   background-color: var(--white);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%; /* Ensure form-control fills width */
 }
 
 .auth-form-group input:focus,
@@ -310,7 +316,7 @@ input.error:focus {
   font-weight: 500;
 }
 
-/* Enhanced buttons with hover effect */
+/* Consolidated Button Styles with Hover Effect */
 .primary-button,
 .story-link,
 .action-button,
@@ -321,19 +327,20 @@ input.error:focus {
   background-color: var(--primary);
   color: white;
   border: none;
-  padding: 12px 18px;
+  padding: 10px 18px; /* Standardized padding */
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  display: inline-flex;
+  display: inline-flex; /* Ensures content is centered and gap works */
   align-items: center;
   justify-content: center;
   gap: 8px;
   z-index: 1;
   box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+  text-decoration: none; /* Ensure links look like buttons */
 }
 
 .primary-button:before,
@@ -376,7 +383,7 @@ input.error:focus {
 .submit-button:hover,
 .load-more:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 8px 15px rgba(67, 97, 238, 0.3); /* Adjusted shadow for consistency */
   background-color: var(--primary-dark);
 }
 
@@ -391,7 +398,7 @@ input.error:focus {
   box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
 }
 
-/* Header Styles */
+/* Header Navigation Drawer */
 .navigation-drawer {
   position: fixed;
   top: 0;
@@ -468,7 +475,7 @@ input.error:focus {
   outline: 2px solid var(--accent);
 }
 
-/* Main Content */
+/* Main Content Area */
 .main-content {
   min-height: calc(100vh - 60px - 100px); /* Account for header and footer */
   padding-top: 60px; /* Height of the header */
@@ -525,48 +532,7 @@ input.error:focus {
   border-radius: 2px;
 }
 
-/* Stories List */
-.stories-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.story-item {
-  background-color: var(--white);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transform: translateY(20px);
-  opacity: 0;
-  transition:
-    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    opacity 0.5s ease,
-    box-shadow 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-app-card.visible .story-item {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.story-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: rgba(67, 97, 238, 0.1);
-}
-
-.story-image-container {
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-}
-
+/* Story Item Details */
 .story-badge {
   position: absolute;
   top: 15px;
@@ -599,17 +565,6 @@ app-card.visible .story-item {
   background-color: var(--primary);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.story-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s ease;
-}
-
-.story-item:hover .story-image {
-  transform: scale(1.08);
 }
 
 .story-content {
@@ -689,7 +644,7 @@ app-card.visible .story-item {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem; /* Specific padding for story-link */
   background-color: var(--primary);
   color: var(--white);
   text-decoration: none;
@@ -731,7 +686,7 @@ app-card.visible .story-item {
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
 }
 
-/* Custom popup styling */
+/* Custom Leaflet Popup Styling */
 .custom-popup .leaflet-popup-content-wrapper {
   border-radius: 8px;
   padding: 0;
@@ -818,7 +773,7 @@ app-card.visible .story-item {
   font-size: 1.1rem;
 }
 
-/* Story Detail */
+/* Story Detail Page */
 .story-detail-item {
   background-color: var(--white);
   border-radius: var(--border-radius);
@@ -840,7 +795,8 @@ app-card.visible .story-item {
   display: block;
 }
 
-.story-image-overlay {
+/* Overwriting previous story-image-overlay for detail page specifically */
+.story-detail-item .story-image-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -851,7 +807,10 @@ app-card.visible .story-item {
     rgba(0, 0, 0, 0) 100%
   );
   padding: 2rem 1.5rem 1rem;
+  height: auto; /* Allow height to adjust based on content */
+  opacity: 1; /* Always visible for detail overlay */
 }
+
 
 .story-image-badge {
   position: absolute;
@@ -915,7 +874,8 @@ app-card.visible .story-item {
   gap: 0.5rem;
 }
 
-.story-actions {
+/* Story Detail Actions - separate from general .story-actions */
+.story-detail-item .story-actions { /* Specific selector for detail page actions */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -955,7 +915,7 @@ app-card.visible .story-item {
   font-weight: 500;
 }
 
-/* Loading placeholder */
+/* Loading Placeholder (Skeleton Loader) */
 .loading-placeholder {
   min-height: 400px;
 }
@@ -1033,7 +993,7 @@ app-card.visible .story-item {
   background-size: 200% 100%;
 }
 
-/* Forms */
+/* Authentication Forms */
 .auth-container {
   max-width: 500px;
   margin: 0 auto;
@@ -1065,34 +1025,14 @@ app-card.visible .story-item {
   font-weight: 500;
 }
 
-.auth-form-group input {
-  padding: 0.8rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  font-family: 'Poppins', sans-serif;
-  transition: var(--transition);
-}
-
 .auth-form-group input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
-.auth-submit-button {
-  padding: 0.8rem;
-  background-color: var(--primary);
-  color: var(--white);
-  border: none;
-  border-radius: var(--border-radius);
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.auth-submit-button:hover {
-  background-color: var(--primary-dark);
+.auth-submit-button { /* Uses consolidated button styles */
+  padding: 0.8rem; /* Specific padding for auth submit button if needed */
 }
 
 .auth-link {
@@ -1111,6 +1051,7 @@ app-card.visible .story-item {
   text-decoration: underline;
 }
 
+/* Story Creation Form */
 .story-form {
   display: flex;
   flex-direction: column;
@@ -1132,13 +1073,8 @@ app-card.visible .story-item {
 }
 
 .form-group textarea {
-  padding: 0.8rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  font-family: 'Poppins', sans-serif;
   min-height: 150px;
   resize: vertical;
-  transition: var(--transition);
 }
 
 .form-group textarea:focus {
@@ -1158,24 +1094,8 @@ app-card.visible .story-item {
   object-fit: cover;
 }
 
-.submit-button {
-  padding: 0.8rem;
-  background-color: var(--primary);
-  color: var(--white);
-  border: none;
-  border-radius: var(--border-radius);
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.submit-button:hover {
-  background-color: var(--primary-dark);
+.submit-button { /* Uses consolidated button styles */
+  padding: 0.8rem; /* Specific padding for submit button if needed */
 }
 
 .submit-button i {
@@ -1183,22 +1103,10 @@ app-card.visible .story-item {
 }
 
 /* Load More Button */
-.load-more {
+.load-more { /* Uses consolidated button styles */
   display: block;
   margin: 2rem auto;
-  padding: 0.8rem 1.5rem;
-  background-color: var(--primary);
-  color: var(--white);
-  border: none;
-  border-radius: var(--border-radius);
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.load-more:hover {
-  background-color: var(--primary-dark);
+  padding: 0.8rem 1.5rem; /* Specific padding for load more button */
 }
 
 .load-more:disabled {
@@ -1458,7 +1366,7 @@ app-card.visible .story-item {
   pointer-events: auto;
 }
 
-/* View Transitions */
+/* View Transitions (for SPA routing) */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1523,7 +1431,7 @@ app-card.visible .story-item {
   }
 }
 
-/* About Page */
+/* About Page Styles */
 .about-content {
   display: grid;
   gap: 2rem;
@@ -1582,13 +1490,14 @@ app-card.visible .story-item {
   color: var(--primary);
 }
 
-/* Map Controls */
+/* Leaflet Map Controls Customization */
 .leaflet-control-layers {
   border-radius: var(--border-radius);
   overflow: hidden;
 }
 
 .leaflet-control-layers-toggle {
+  /* Using data URI for SVG icon for self-contained styling */
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234361ee"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
 }
 
@@ -1707,7 +1616,7 @@ app-card.visible .story-item {
 /* PWA Install Prompt */
 #install-container {
   position: fixed;
-  bottom: -100px;
+  bottom: -100px; /* Initially hidden */
   left: 0;
   right: 0;
   background-color: var(--white);
@@ -1757,10 +1666,11 @@ app-card.visible .story-item {
 }
 
 #install-container.show {
-  bottom: 20px;
+  bottom: 20px; /* Visible position */
   animation: slideUpInstall 0.5s forwards;
 }
 
+/* Specific button style for install prompt (can use general primary-button if desired) */
 .primary-button {
   background-color: var(--primary);
   color: white;
@@ -1802,23 +1712,11 @@ app-card.visible .story-item {
   }
 }
 
-.back-link {
+.back-link { /* Uses consolidated button styles */
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.8rem 1.5rem;
-  background-color: var(--primary);
-  color: var(--white);
-  text-decoration: none;
-  border-radius: var(--border-radius);
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.back-link:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Map Error Styles */
@@ -1908,7 +1806,7 @@ app-card.visible .story-item {
   background-color: #d1fae5;
   color: #10b981;
   border-left: 4px solid #10b981;
-  animation: fadeOut 4s forwards 2s;
+  animation: fadeOut 4s forwards 2s; /* Fade out after a delay */
 }
 
 .connection-status.online i {
@@ -1934,17 +1832,6 @@ app-card.visible .story-item {
   }
   50% {
     transform: translateY(-10px);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(20px);
   }
 }
 
@@ -2022,7 +1909,7 @@ app-card.visible .story-item {
   color: var(--primary);
 }
 
-/* Improved Animations */
+/* Improved Animations for shimmer */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -2032,180 +1919,7 @@ app-card.visible .story-item {
   }
 }
 
-/* Enhanced Story Cards */
-.story-item {
-  background-color: var(--white);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transform: translateY(20px);
-  opacity: 0;
-  transition:
-    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    opacity 0.5s ease,
-    box-shadow 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.story-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: rgba(67, 97, 238, 0.1);
-}
-
-.story-badge {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  z-index: 2;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(4px);
-  background-color: rgba(67, 97, 238, 0.85);
-  transition: transform 0.3s ease;
-}
-
-.story-item:hover .story-badge {
-  transform: scale(1.1);
-}
-
-.story-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s ease;
-}
-
-.story-item:hover .story-image {
-  transform: scale(1.08);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--primary);
-  color: var(--white);
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  border: 2px solid white;
-  transition: transform 0.3s ease;
-}
-
-.story-item:hover .user-avatar {
-  transform: rotate(5deg);
-}
-
-/* Enhanced Buttons */
-.primary-button,
-.story-link,
-.action-button,
-.back-link,
-.auth-submit-button,
-.submit-button,
-.load-more {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.primary-button:before,
-.story-link:before,
-.action-button:before,
-.back-link:before,
-.auth-submit-button:before,
-.submit-button:before,
-.load-more:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.7s ease;
-}
-
-.primary-button:hover:before,
-.story-link:hover:before,
-.action-button:hover:before,
-.back-link:hover:before,
-.auth-submit-button:hover:before,
-.submit-button:hover:before,
-.load-more:hover:before {
-  left: 100%;
-}
-
-.primary-button:hover,
-.story-link:hover,
-.action-button:hover,
-.back-link:hover,
-.auth-submit-button:hover,
-.submit-button:hover,
-.load-more:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
-  background-color: var(--primary-dark);
-}
-
-.primary-button:active,
-.story-link:active,
-.action-button:active,
-.back-link:active,
-.auth-submit-button:active,
-.submit-button:active,
-.load-more:active {
-  transform: translateY(1px);
-  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
-}
-
-/* Enhanced Form Inputs */
-.auth-form-group input,
-.form-group textarea,
-.form-control {
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  background-color: var(--white);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.auth-form-group input:focus,
-.form-group textarea:focus,
-.form-control:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
-  transform: translateY(-1px);
-}
-
+/* Form Labels */
 .auth-form-group label,
 .form-group label {
   font-weight: 600;
@@ -2507,7 +2221,7 @@ app-card.visible .story-item {
   transition: opacity 0.3s ease;
 }
 
-/* Map Styles */
+/* Map Styles for Add Story */
 .add-story-map {
   height: 300px;
   border-radius: 8px;
@@ -2576,7 +2290,7 @@ app-card.visible .story-item {
 }
 
 .custom-checkbox input[type='checkbox']:checked::after {
-  content: '\f00c';
+  content: '\f00c'; /* Font Awesome check icon */
   font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   font-size: 12px;
@@ -2614,27 +2328,15 @@ app-card.visible .story-item {
   background-color: #e9ecef;
 }
 
-/* Form Styling */
+/* General Form Styling - consolidated from duplicate sections */
 .form-label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   display: block;
 }
 
-.form-control {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  margin-bottom: 0.5rem;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+.form-control { /* Already defined above in consolidation with input/textarea */
+  margin-bottom: 0.5rem; /* Specific for form-control margin */
 }
 
 .error-text {
@@ -2699,7 +2401,7 @@ app-card.visible .story-item {
 }
 
 .permission-denied::after {
-  content: '\f05e';
+  content: '\f05e'; /* Font Awesome ban icon */
   font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   font-size: 12px;
@@ -2716,7 +2418,7 @@ app-card.visible .story-item {
   justify-content: center;
 }
 
-/* Theme Mode Toggle Button */
+/* Theme Mode Toggle Button (in Sidebar) */
 #theme-toggle-item {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -2744,7 +2446,7 @@ app-card.visible .story-item {
   color: var(--white);
 }
 
-/* Data Theme Attribute */
+/* Data Theme Attribute for manual toggle */
 [data-theme='dark'] {
   --light: var(--dark-bg);
   --dark: var(--dark-text);
@@ -2915,7 +2617,6 @@ app-card.visible .story-item {
   background-color: white;
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
   z-index: 1001;
-
   transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
@@ -2932,10 +2633,10 @@ app-card.visible .story-item {
   display: flex;
   align-items: center;
   padding: 1.25rem 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Note: --border-color is not defined, will default. Consider adding a default or specific value. */
   background: linear-gradient(
     135deg,
-    var(--primary-light) 0%,
+    var(--primary-light) 0%, /* Note: --primary-light is not defined. Consider adding to :root. */
     rgba(67, 97, 238, 0.1) 100%
   );
   position: relative;
@@ -2992,7 +2693,7 @@ app-card.visible .story-item {
 .sidebar-user {
   padding: 1.25rem;
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Note: --border-color */
   margin-bottom: 1rem;
   transition: all 0.3s ease;
 }
@@ -3004,7 +2705,7 @@ app-card.visible .story-item {
 
 .sidebar-guest-icon {
   font-size: 3rem;
-  color: var(--gray-500);
+  color: var(--gray-500); /* Note: --gray-500 not defined. Should be part of your color palette. */
   margin-bottom: 0.75rem;
 }
 
@@ -3014,7 +2715,7 @@ app-card.visible .story-item {
 }
 
 .sidebar-guest small {
-  color: var(--gray-500);
+  color: var(--gray-500); /* Note: --gray-500 */
   opacity: 0.8;
 }
 
@@ -3051,21 +2752,7 @@ app-card.visible .story-item {
 
 .sidebar-user-avatar i {
   font-size: 3rem;
-  color: var(--gray-500);
-}
-
-.sidebar-user-name {
-  margin: 0 0 0.25rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.sidebar-user-email {
-  margin: 0;
-  color: var(--gray-500);
-  font-size: 0.9rem;
-  word-break: break-word;
-  opacity: 0.7;
+  color: var(--gray-500); /* Note: --gray-500 */
 }
 
 .sidebar-nav {
@@ -3082,7 +2769,7 @@ app-card.visible .story-item {
   display: flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  color: var(--text-color);
+  color: var(--text-color); /* Note: --text-color not defined. Consider using --dark or --dark-text. */
   text-decoration: none;
   transition: all 0.3s ease;
   border-radius: 8px;
@@ -3119,7 +2806,7 @@ app-card.visible .story-item {
 
 .sidebar-footer {
   padding: 1.25rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color); /* Note: --border-color */
 }
 
 .sidebar-logout-button {
@@ -3250,10 +2937,10 @@ body.sidebar-open {
   padding: 2rem;
   background: linear-gradient(
     135deg,
-    var(--primary-light) 0%,
+    var(--primary-light) 0%, /* Note: --primary-light */
     rgba(67, 97, 238, 0.05) 100%
   );
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Note: --border-color */
 }
 
 .profile-avatar {
@@ -3310,7 +2997,7 @@ body.sidebar-open {
   display: flex;
   padding: 1.5rem;
   background-color: rgba(67, 97, 238, 0.02);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Note: --border-color */
 }
 
 .stat-item {
@@ -3338,7 +3025,7 @@ body.sidebar-open {
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Note: --border-color */
 }
 
 .profile-action-button {
@@ -3658,11 +3345,11 @@ body.sidebar-open {
 }
 
 .theme-option:first-child i {
-  color: #f8961e;
+  color: #f8961e; /* Sun icon color */
 }
 
 .theme-option:last-child i {
-  color: #3a0ca3;
+  color: #3a0ca3; /* Moon icon color */
 }
 
 .theme-option span {
@@ -3755,6 +3442,7 @@ body.sidebar-open {
   background-color: var(--danger);
   color: white;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(247, 37, 133, 0.25);
 }
 
 .login-required-content,
@@ -3796,7 +3484,7 @@ body.sidebar-open {
   max-width: 500px;
 }
 
-/* Dark Mode Support */
+/* Dark Mode Support for various components */
 [data-theme='dark'] .favorites-container,
 [data-theme='dark'] .profile-card,
 [data-theme='dark'] .profile-stats-card,
@@ -3811,7 +3499,7 @@ body.sidebar-open {
   color: var(--dark-text);
 }
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness for specific components */
 @media (max-width: 992px) {
   .profile-wrapper {
     grid-template-columns: 1fr;
@@ -3880,7 +3568,7 @@ body.sidebar-open {
   opacity: 0.9;
 }
 
-/* Styling untuk button notification di dropdown user */
+/* Styling for notification toggle button in user dropdown */
 .notification-toggle {
   display: flex;
   align-items: center;

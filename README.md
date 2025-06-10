@@ -76,10 +76,6 @@ The application allows users to share their learning journey with others, add lo
 * Menerima notifikasi saat ada cerita baru dan saat menambahkan cerita ke favorit.
 * Dukungan untuk pengelolaan izin notifikasi.
 
-### App Shell
-
-* Arsitektur *App Shell* untuk memisahkan UI statis dari konten dinamis, memastikan loading cepat.
-
 ---
 
 ## 🌐 Teknologi yang Digunakan

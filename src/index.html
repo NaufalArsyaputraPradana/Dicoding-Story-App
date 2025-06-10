@@ -22,8 +22,7 @@
     <link rel="shortcut icon" href="./favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="./images/logo.png" />
 
-    <!-- Preload critical CSS and JS -->
-    <link rel="preload" href="./styles/styles.css" as="style" />
+    <!-- Preload critical JS (styles.css preload removed as it's directly linked below) -->
     <link rel="preload" href="./scripts/index.js" as="script" crossorigin />
 
     <!-- Preconnect for fonts and CDN -->
@@ -69,6 +68,95 @@
       rel="stylesheet"
     />
 
+    <!-- Custom styles for PWA Install Bubble CTA (move this to styles.css) -->
+    <style>
+      /* PWA Install Prompt Container (Floating Bubble) */
+      .install-bubble-container {
+        position: fixed;
+        bottom: -100px; /* Hidden initially */
+        right: 20px;
+        z-index: 1100; /* Higher than toast-container */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        transition: all 0.4s ease-out;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .install-bubble-container.show {
+        bottom: 20px;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .install-bubble-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 50px; /* Pill shape */
+        background-color: var(--primary);
+        color: var(--white);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+        white-space: nowrap; /* Prevent text wrapping */
+      }
+
+      .install-bubble-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        background-color: var(--primary-dark);
+      }
+
+      .install-bubble-button i {
+        font-size: 1.2rem;
+      }
+
+      .dismiss-bubble-button {
+        background-color: rgba(0, 0, 0, 0.4);
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .dismiss-bubble-button:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+        transform: scale(1.1);
+      }
+
+      /* Media query for smaller screens, if needed for positioning */
+      @media (max-width: 600px) {
+        .install-bubble-container {
+          bottom: 10px;
+          right: 10px;
+        }
+        .install-bubble-button {
+          padding: 10px 15px;
+          font-size: 0.9rem;
+        }
+        .dismiss-bubble-button {
+          width: 30px;
+          height: 30px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+
     <!-- Fallback untuk non-JS -->
     <noscript>
       <style>
@@ -105,12 +193,23 @@
     </main>
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
+    <!-- PWA Install Prompt Container (Floating Bubble) -->
+    <div id="install-bubble-container" class="install-bubble-container">
+      <button id="install-button-bubble" class="install-bubble-button">
+        <i class="fas fa-download"></i>
+        <span class="install-bubble-text">Instal Aplikasi</span>
+      </button>
+      <button id="dismiss-install-bubble" class="dismiss-bubble-button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
     <!-- Defer non-critical JavaScript -->
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"
     ></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -134,5 +233,73 @@
     <script type="module" src="./scripts/error-handler.js"></script>
     <script type="module" defer src="./scripts/connection-monitor.js"></script>
     <script type="module" src="./scripts/index.js"></script>
+
+    <script>
+      let deferredPrompt; // Variable to store the install prompt event
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Show the install prompt UI (e.g., by making the container visible)
+        const installBubbleContainer = document.getElementById('install-bubble-container');
+        if (installBubbleContainer) {
+          installBubbleContainer.classList.add('show');
+        }
+        console.log('[PWA] beforeinstallprompt fired. Prompt saved.');
+      });
+
+      // Handle install button click
+      const installButtonBubble = document.getElementById('install-button-bubble');
+      if (installButtonBubble) {
+        installButtonBubble.addEventListener('click', async () => {
+          const installBubbleContainer = document.getElementById('install-bubble-container');
+          if (installBubbleContainer) {
+            installBubbleContainer.classList.remove('show'); // Hide the install prompt
+          }
+
+          if (deferredPrompt) {
+            // Show the install prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            // Optionally, send analytics to know if the user accepted the prompt
+            console.log(`[PWA] User response to the install prompt: ${outcome}`);
+            // Clear the deferredPrompt so it can't be triggered again
+            deferredPrompt = null;
+
+            // If the app is installed, you might want to hide the button permanently
+            if (outcome === 'accepted') {
+              console.log('[PWA] User accepted the install prompt.');
+            } else {
+              console.log('[PWA] User dismissed the install prompt.');
+            }
+          }
+        });
+      }
+
+      // Handle dismiss button click
+      const dismissInstallBubble = document.getElementById('dismiss-install-bubble');
+      if (dismissInstallBubble) {
+        dismissInstallBubble.addEventListener('click', () => {
+          const installBubbleContainer = document.getElementById('install-bubble-container');
+          if (installBubbleContainer) {
+            installBubbleContainer.classList.remove('show'); // Just hide the prompt
+          }
+          console.log('[PWA] Install prompt dismissed by user.');
+        });
+      }
+
+      // Listen for the `appinstalled` event to confirm installation
+      window.addEventListener('appinstalled', () => {
+        // Hide the install prompt, if still visible
+        const installBubbleContainer = document.getElementById('install-bubble-container');
+        if (installBubbleContainer) {
+          installBubbleContainer.classList.remove('show');
+        }
+        console.log('[PWA] Dicoding Story was successfully installed!');
+      });
+    </script>
   </body>
 </html>
