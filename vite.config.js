@@ -8,9 +8,9 @@ export default defineConfig(({ command }) => {
   const repoName = 'Dicoding-Story-App';
   const base = command === 'build' ? `/${repoName}/` : '/';
   return {
-    base: base,
+    base,
     root: 'src',
-    publicDir: resolve(__dirname, 'src', 'public'), // Ensure public assets are served
+    publicDir: resolve(__dirname, 'src', 'public'),
     build: {
       outDir: '../dist',
       emptyOutDir: true,
@@ -30,16 +30,14 @@ export default defineConfig(({ command }) => {
       port: 5175,
       host: true,
       open: true,
-      strictPort: false, // Allow fallback to another port if 5175 is in use
+      strictPort: false,
       headers: {
         'Service-Worker-Allowed': '/',
       },
       fs: {
-        // Allow serving files from one level up to the project root
         allow: ['..'],
       },
       hmr: {
-        // Ensure WebSocket connection uses the same port as the server
         port: 5175,
         host: 'localhost',
       },
@@ -47,17 +45,30 @@ export default defineConfig(({ command }) => {
     plugins: [
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.png', 'offline.html', 'images/*'],
+        includeAssets: [
+          'favicon.png',
+          'offline.html',
+          'images/logo.png',
+          'images/*',
+        ],
         manifest,
+        injectRegister: 'auto',
         workbox: {
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/story-api\.dicoding\.dev\/v1\//,
               handler: 'NetworkFirst',
-              options: { cacheName: 'api-cache', networkTimeoutSeconds: 10 },
+              options: {
+                cacheName: 'api-cache',
+                networkTimeoutSeconds: 10,
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 7 * 24 * 60 * 60,
+                },
+              },
             },
             {
-              urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
               handler: 'CacheFirst',
               options: {
                 cacheName: 'image-cache',
@@ -68,11 +79,22 @@ export default defineConfig(({ command }) => {
               },
             },
             {
-              urlPattern: /\//,
+              urlPattern: /\/$/,
               handler: 'NetworkFirst',
-              options: { cacheName: 'html-cache' },
+              options: {
+                cacheName: 'html-cache',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 7 * 24 * 60 * 60,
+                },
+              },
             },
           ],
+          navigateFallback: '/offline.html',
+          globPatterns: ['**/*.{js,css,html,png,svg,jpg,jpeg,webp,json}'],
+        },
+        devOptions: {
+          enabled: true,
         },
       }),
     ],

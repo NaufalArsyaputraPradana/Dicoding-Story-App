@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -18,36 +18,34 @@
       :root {
         --primary: #4361ee;
         --primary-dark: #3a56d4;
-        --secondary: #3f37c9;
         --light: #f8f9fa;
         --dark: #212529;
         --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
-
-      * {
-        margin: 0;
-        padding: 0;
+      html {
         box-sizing: border-box;
       }
-
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
       body {
         font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+        background: var(--light);
+        color: var(--dark);
         display: flex;
         flex-direction: column;
-        min-height: 100vh;
-        background-color: var(--light);
-        color: var(--dark);
       }
-
       .header {
         padding: 1rem 0;
-        background-color: white;
+        background: white;
         box-shadow: var(--shadow);
         text-align: center;
       }
-
       .brand {
         display: inline-flex;
         align-items: center;
@@ -56,13 +54,15 @@
         font-weight: 700;
         color: var(--primary);
         text-decoration: none;
+        transition: color 0.2s;
       }
-
+      .brand:hover {
+        color: var(--primary-dark);
+      }
       .brand img {
         height: 32px;
         width: 32px;
       }
-
       .offline-container {
         flex: 1;
         display: flex;
@@ -72,17 +72,15 @@
         padding: 2rem;
         text-align: center;
       }
-
       .offline-card {
-        background-color: white;
+        background: white;
         border-radius: 16px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         padding: 2.5rem;
         max-width: 600px;
         width: 100%;
-        animation: fadeIn 0.5s ease-out;
+        animation: fadeIn 0.5s;
       }
-
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -93,93 +91,96 @@
           transform: translateY(0);
         }
       }
-
       .offline-icon {
         font-size: 3.5rem;
         color: var(--primary);
         margin-bottom: 1.5rem;
-        display: inline-block;
         background: rgba(67, 97, 238, 0.1);
         width: 100px;
         height: 100px;
         line-height: 100px;
         border-radius: 50%;
+        display: inline-block;
       }
-
       h1 {
         font-size: 1.8rem;
         margin-bottom: 1rem;
         color: var(--primary);
       }
-
       p {
         font-size: 1rem;
         max-width: 500px;
-        margin: 0 auto 2rem auto;
+        margin: 0 auto 2rem;
         color: #666;
         line-height: 1.6;
       }
-
       .actions {
         display: flex;
         gap: 1rem;
         justify-content: center;
         flex-wrap: wrap;
       }
-
       .back-button {
-        background-color: var(--primary);
+        background: var(--primary);
         color: white;
         border: none;
         padding: 0.75rem 1.5rem;
         border-radius: 8px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s;
         text-decoration: none;
         font-size: 1rem;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
       }
-
+      .back-button:focus {
+        outline: 2px solid var(--primary-dark);
+        outline-offset: 2px;
+      }
       .back-button:hover {
-        background-color: var(--primary-dark);
+        background: var(--primary-dark);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
       }
-
       .back-button.secondary {
-        background-color: transparent;
+        background: transparent;
         border: 1px solid var(--primary);
         color: var(--primary);
       }
-
       .back-button.secondary:hover {
-        background-color: rgba(67, 97, 238, 0.1);
+        background: rgba(67, 97, 238, 0.1);
       }
-
+      .tips {
+        margin-top: 2rem;
+        color: #888;
+        font-size: 0.95rem;
+        background: #f1f3fa;
+        border-radius: 8px;
+        padding: 1rem;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
       .footer {
         text-align: center;
         padding: 1.5rem;
-        background-color: white;
+        background: white;
         color: #666;
         font-size: 0.9rem;
         border-top: 1px solid #eee;
       }
-
       @media (max-width: 600px) {
         .offline-card {
           padding: 1.5rem;
         }
-
         .offline-icon {
           font-size: 2.5rem;
           width: 80px;
           height: 80px;
           line-height: 80px;
         }
-
         h1 {
           font-size: 1.5rem;
         }
@@ -188,50 +189,42 @@
   </head>
   <body>
     <header class="header">
-      <a href="/" class="brand">
+      <a href="/" class="brand" tabindex="0">
         <img src="/images/logo.png" alt="Dicoding Story Logo" />
         Dicoding Story
       </a>
     </header>
-
-    <div class="offline-container">
+    <div class="offline-container" role="main" aria-labelledby="offline-title">
       <div class="offline-card">
-        <div class="offline-icon">
+        <div class="offline-icon" aria-hidden="true">
           <i class="fas fa-wifi-slash"></i>
         </div>
-        <h1>Anda Sedang Offline</h1>
+        <h1 id="offline-title">Anda Sedang Offline</h1>
         <p>
-          Sepertinya koneksi internet Anda sedang bermasalah. Silakan periksa
-          koneksi internet dan coba lagi.
+          Sepertinya koneksi internet Anda bermasalah.<br />Silakan periksa
+          koneksi dan coba lagi.
         </p>
         <div class="actions">
-          <a href="/" class="back-button">
-            <i class="fas fa-sync-alt"></i> Coba Lagi
-          </a>
-          <a href="/" class="back-button secondary">
-            <i class="fas fa-home"></i> Kembali ke Beranda
-          </a>
+          <a href="/" class="back-button" aria-label="Coba Lagi"
+            ><i class="fas fa-sync-alt"></i> Coba Lagi</a
+          >
+          <a
+            href="/"
+            class="back-button secondary"
+            aria-label="Kembali ke Beranda"
+            ><i class="fas fa-home"></i> Kembali ke Beranda</a
+          >
+        </div>
+        <div class="tips">
+          <strong>Tips:</strong> Pastikan perangkat Anda terhubung ke
+          internet.<br />
+          Jika masalah berlanjut, coba refresh halaman atau buka aplikasi di
+          lain waktu.
         </div>
       </div>
     </div>
-
     <footer class="footer">
-      <div>
-        Dicoding Story App &copy; 2023 - Berbagi Cerita Pengalaman Belajar
-      </div>
+      Dicoding Story App &copy; 2023 - Berbagi Cerita Pengalaman Belajar
     </footer>
-
-    <script>
-      // Check connection periodically
-      setInterval(() => {
-        if (navigator.onLine) {
-          document.querySelector('.offline-icon').innerHTML =
-            '<i class="fas fa-wifi"></i>';
-          document.querySelector('h1').textContent = 'Koneksi Pulih!';
-          document.querySelector('p').textContent =
-            'Koneksi internet Anda telah pulih. Silakan kembali ke aplikasi.';
-        }
-      }, 3000);
-    </script>
   </body>
 </html>

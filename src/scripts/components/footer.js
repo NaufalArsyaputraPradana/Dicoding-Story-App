@@ -6,11 +6,10 @@ class AppFooter extends HTMLElement {
 
   render() {
     const currentYear = new Date().getFullYear();
-
     this.innerHTML = `
-      <footer class="app-footer">
+      <footer class="app-footer" role="contentinfo">
         <div class="container footer-content">
-          <div class="social-links">
+          <div class="social-links" aria-label="Social media links">
             <a href="https://github.com/NaufalArsyaputraPradana/" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-github"></i>
             </a>
@@ -21,9 +20,13 @@ class AppFooter extends HTMLElement {
               <i class="fab fa-instagram"></i>
             </a>
           </div>
-          <p>&copy; ${currentYear} Dicoding Story. All rights reserved.</p>
+          <p class="footer-year" tabindex="0" style="cursor:pointer;">
+            &copy; ${currentYear} Dicoding Story. All rights reserved.
+          </p>
           <p class="copyright">
-            Made with Naufal Arsyaputra Pradana <i class="fas fa-code" style="color: var(--danger)"></i> for Dicoding Submission
+            Made with <i class="fas fa-code" style="color: var(--danger)" aria-hidden="true"></i>
+            by <a href="https://github.com/NaufalArsyaputraPradana/" target="_blank" rel="noopener noreferrer">Naufal Arsyaputra Pradana</a>
+            for Dicoding Submission
           </p>
         </div>
       </footer>
@@ -31,13 +34,17 @@ class AppFooter extends HTMLElement {
   }
 
   setupEventListeners() {
-    const yearElement = this.querySelector('p:first-of-type');
+    // Scroll to top on year click or Enter/Space key
+    const yearElement = this.querySelector('.footer-year');
     if (yearElement) {
       yearElement.addEventListener('click', () => {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      yearElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
     }
   }

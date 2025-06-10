@@ -1,127 +1,108 @@
 // Service Worker for Dicoding Story App
-const CACHE_NAME = 'dicoding-story-v1';
+const CACHE_NAME = 'dicoding-story-v3';
+const OFFLINE_URL = '/offline.html';
 
-// URLs to cache
 const urlsToCache = [
   '/',
   '/index.html',
+  '/offline.html',
   '/manifest.json',
   '/favicon.png',
   '/images/logo.png',
   '/styles/styles.css',
   '/styles/responsive.css',
   '/scripts/index.js',
-  '/scripts/app.js',
-  '/scripts/config.js',
 ];
 
 // Install event - Cache assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cache opened');
-        return cache.addAll(urlsToCache);
-      })
-      .catch((error) => {
-        console.error('Cache installation failed:', error);
-      })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.addAll(urlsToCache);
+      self.skipWaiting();
+      console.log('[SW] Service Worker installed & assets cached');
+    })()
   );
 });
 
 // Activate event - Clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(
         cacheNames
-          .filter((cacheName) => {
-            return cacheName !== CACHE_NAME;
-          })
-          .map((cacheName) => {
-            return caches.delete(cacheName);
-          })
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
       );
-    })
+      self.clients.claim();
+      console.log('[SW] Service Worker activated & old caches cleaned');
+    })()
   );
 });
 
-// Fetch event - Serve from cache, fall back to network
+// Fetch event - Serve from cache, fall back to network, fallback to offline
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
-    caches
-      .match(event.request)
-      .then((response) => {
-        // Cache hit - return the response from the cached version
-        if (response) {
-          return response;
+    (async () => {
+      try {
+        // Try cache first
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+
+        // Try network
+        const response = await fetch(event.request);
+        // Cache new requests for static assets
+        if (
+          response &&
+          response.status === 200 &&
+          event.request.url.startsWith(self.location.origin)
+        ) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, response.clone());
         }
-
-        // Not in cache - return the result from the live server
-        // `fetch` is essentially a "fallback"
-        return fetch(event.request).then((response) => {
-          // Check if we received a valid response
-          if (
-            !response ||
-            response.status !== 200 ||
-            response.type !== 'basic'
-          ) {
-            return response;
-          }
-
-          // Clone the response
-          const responseToCache = response.clone();
-
-          // Add the response to cache
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-
-          return response;
-        });
-      })
-      .catch((error) => {
-        console.error('Fetch failed:', error);
-        // You can return a custom offline page here
-      })
+        return response;
+      } catch (err) {
+        // Fallback for navigation requests (HTML)
+        if (
+          event.request.mode === 'navigate' ||
+          event.request.destination === 'document'
+        ) {
+          return caches.match(OFFLINE_URL);
+        }
+        // Fallback for other requests
+        return new Response('Offline', { status: 503, statusText: 'Offline' });
+      }
+    })()
   );
 });
 
 // Push notification event
 self.addEventListener('push', (event) => {
-  let notificationData = {};
-
+  let data = {};
   try {
-    notificationData = event.data.json();
-  } catch (e) {
-    notificationData = {
-      title: 'New Notification',
-      body: event.data ? event.data.text() : 'No content',
-    };
+    data = event.data.json();
+  } catch {
+    data = { title: 'Dicoding Story', body: 'Ada notifikasi baru.' };
   }
-
   const options = {
-    body: notificationData.body || 'New content available',
+    body: data.body || 'New content available',
     icon: '/images/logo.png',
     badge: '/images/logo.png',
     vibrate: [100, 50, 100],
     data: {
-      url: notificationData.url || '/',
+      url: data.url || '/',
     },
   };
 
-  event.waitUntil(
-    self.registration.showNotification(
-      notificationData.title || 'Dicoding Story',
-      options
-    )
-  );
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 // Notification click event
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-
   event.waitUntil(clients.openWindow(event.notification.data.url || '/'));
 });

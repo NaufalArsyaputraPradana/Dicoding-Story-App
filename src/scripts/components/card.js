@@ -1,5 +1,7 @@
-import { showFormattedDate } from '../utils/index';
+import { showFormattedDate, truncateText, getInitials } from '../utils/index';
 import CONFIG from '../config';
+// Tambahkan import IdbHelper
+import IdbHelper from '../idb';
 
 class AppCard extends HTMLElement {
   set story(data) {
@@ -11,7 +13,6 @@ class AppCard extends HTMLElement {
     if (!this._story) return;
 
     try {
-      // Ensure required properties exist
       const story = {
         id: this._story.id || `unknown-${Date.now()}`,
         name: this._story.name || 'Unknown User',
@@ -22,18 +23,22 @@ class AppCard extends HTMLElement {
         lon: this._story.lon,
       };
 
-      const formattedDate = showFormattedDate(story.createdAt, 'id-ID', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      // Generate unique IDs for accessibility
+      const formattedDate = showFormattedDate(story.createdAt, 'id-ID');
       const titleId = `story-title-${story.id}`;
       const descId = `story-desc-${story.id}`;
-
-      // Create a color for this card based on the user's name (consistent for same user)
       const userColor = getUserColor(story.name);
+
+      // Check if story is saved in favorites (localStorage)
+      let isSaved = false;
+      try {
+        const favoritesJson = localStorage.getItem('favoriteStories');
+        if (favoritesJson) {
+          const favorites = JSON.parse(favoritesJson);
+          isSaved = Array.isArray(favorites) && favorites.includes(story.id);
+        }
+      } catch {
+        isSaved = false;
+      }
 
       this.innerHTML = `
         <article class="story-item" aria-labelledby="${titleId}" aria-describedby="${descId}">
@@ -49,7 +54,6 @@ class AppCard extends HTMLElement {
               onerror="this.src='./images/placeholder.jpg'"
             >
           </div>
-          
           <div class="story-content">
             <div class="story-header">
               <div class="story-user">
@@ -71,36 +75,85 @@ class AppCard extends HTMLElement {
                   : ''
               }
             </div>
-            
             <p class="story-description" id="${descId}">${truncateText(story.description, 120)}</p>
-            
             ${
               story.lat && story.lon
-                ? `<div class="story-map" id="map-${story.id}" 
-                        aria-label="Location of story by ${story.name}" 
-                        tabindex="0"></div>`
+                ? `<div class="story-map" id="map-${story.id}" aria-label="Location of story by ${story.name}" tabindex="0"></div>`
                 : ''
             }
-            
             <div class="story-actions">
-              <a href="#/stories/${story.id}" class="story-link" 
-                 aria-label="Read full story by ${story.name}">
+              <a href="#/stories/${story.id}" class="story-link" aria-label="Read full story by ${story.name}">
                 <i class="fas fa-book-reader" aria-hidden="true"></i>
                 Read Full Story
               </a>
+              <button 
+                class="save-story-btn${isSaved ? ' saved' : ''}" 
+                aria-label="${isSaved ? 'Saved' : 'Save to favorites'}"
+                title="${isSaved ? 'Saved' : 'Save to favorites'}"
+              >
+                <i class="fas fa-bookmark"></i>
+                <span>${isSaved ? 'Saved' : 'Save'}</span>
+              </button>
             </div>
           </div>
         </article>
       `;
 
+      // Save button logic
+      const saveBtn = this.querySelector('.save-story-btn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          let favorites = [];
+          try {
+            const favoritesJson = localStorage.getItem('favoriteStories');
+            favorites = favoritesJson ? JSON.parse(favoritesJson) : [];
+          } catch {
+            favorites = [];
+          }
+          const alreadySaved = favorites.includes(story.id);
+          if (!alreadySaved) {
+            favorites.push(story.id);
+            localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+            saveBtn.classList.add('saved');
+            saveBtn.setAttribute('aria-label', 'Saved');
+            saveBtn.title = 'Saved';
+            saveBtn.querySelector('span').textContent = 'Saved';
+            // Tambahkan ke IndexedDB
+            try {
+              await IdbHelper.addToFavorites(story);
+            } catch (err) {
+              // Optional: tampilkan error jika gagal simpan ke IndexedDB
+              window.showToast?.('Gagal menyimpan ke database lokal', 'error');
+            }
+            window.showToast?.('Cerita disimpan ke Favorit!', 'success');
+          } else {
+            // Optional: allow unsave
+            favorites = favorites.filter((id) => id !== story.id);
+            localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+            saveBtn.classList.remove('saved');
+            saveBtn.setAttribute('aria-label', 'Save to favorites');
+            saveBtn.title = 'Save to favorites';
+            saveBtn.querySelector('span').textContent = 'Save';
+            // Hapus dari IndexedDB
+            try {
+              await IdbHelper.removeFromFavorites(story.id);
+            } catch (err) {
+              window.showToast?.(
+                'Gagal menghapus dari database lokal',
+                'error'
+              );
+            }
+            window.showToast?.('Cerita dihapus dari Favorit', 'info');
+          }
+        });
+      }
+
+      // Render map if location exists
       if (story.lat && story.lon) {
-        // Use requestAnimationFrame to ensure the map container is ready
         requestAnimationFrame(() => this.renderMap());
       }
     } catch (error) {
-      console.error('Error rendering card:', error, { story: this._story });
-
-      // Render a fallback card
       this.innerHTML = `
         <article class="story-item">
           <div class="story-content">
@@ -128,35 +181,16 @@ class AppCard extends HTMLElement {
 
   renderMap() {
     try {
-      if (!this._story) {
-        console.error('Cannot render map: story data is missing');
-        return;
-      }
-
-      // Check if we have valid coordinates
+      if (!this._story) return;
       const lat = parseFloat(this._story.lat);
       const lon = parseFloat(this._story.lon);
+      if (isNaN(lat) || isNaN(lon)) return;
 
-      if (isNaN(lat) || isNaN(lon)) {
-        console.error('Cannot render map: invalid coordinates', {
-          lat: this._story.lat,
-          lon: this._story.lon,
-        });
-        return;
-      }
-
-      // Ensure required story properties
       const storyId = this._story.id || `unknown-${Date.now()}`;
       const storyName = this._story.name || 'Unknown User';
       const storyDescription = this._story.description || '';
-
       const mapElement = this.querySelector(`#map-${storyId}`);
-      if (!mapElement || !window.L) {
-        console.error(
-          'Cannot render map: DOM element or Leaflet not available'
-        );
-        return;
-      }
+      if (!mapElement || !window.L) return;
 
       const map = L.map(mapElement, {
         zoomControl: false,
@@ -169,12 +203,8 @@ class AppCard extends HTMLElement {
         attributionControl: false,
       }).setView([lat, lon], 13);
 
-      // Add base layer
-      L.tileLayer(CONFIG.MAP_TILE_LAYERS.osm.url, {
-        maxZoom: 19,
-      }).addTo(map);
+      L.tileLayer(CONFIG.MAP_TILE_LAYERS.osm.url, { maxZoom: 19 }).addTo(map);
 
-      // Add marker with custom icon based on user color
       const userColor = getUserColor(storyName);
       const customIcon = L.divIcon({
         html: `<div style="background-color: ${userColor}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
@@ -193,31 +223,25 @@ class AppCard extends HTMLElement {
             <p>${truncateText(storyDescription, 50)}...</p>
             <a href="#/stories/${storyId}" class="popup-link">View Details</a>
           </div>`,
-          {
-            className: 'custom-popup',
-            closeButton: false,
-          }
+          { className: 'custom-popup', closeButton: false }
         )
         .openPopup();
 
-      // Add map click handler that navigates to detail page
       map.on('click', () => {
         window.location.hash = `#/stories/${storyId}`;
       });
 
-      // Add keyboard handler for accessibility
       mapElement.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           window.location.hash = `#/stories/${storyId}`;
         }
       });
     } catch (error) {
-      console.error('Error rendering map:', error, { story: this._story });
+      // Silent fail for map
     }
   }
 
   connectedCallback() {
-    // Add intersection observer to animate cards when they enter viewport
     try {
       if (
         'IntersectionObserver' in window &&
@@ -234,15 +258,11 @@ class AppCard extends HTMLElement {
           },
           { threshold: 0.2 }
         );
-
         observer.observe(this);
       } else {
-        // Add visible class immediately if IntersectionObserver not supported
         this.classList.add('visible');
       }
-    } catch (error) {
-      console.error('Error in connectedCallback:', error);
-      // Ensure the card is visible even if observer fails
+    } catch {
       this.classList.add('visible');
     }
   }
@@ -251,59 +271,22 @@ class AppCard extends HTMLElement {
 customElements.define('app-card', AppCard);
 
 // Helper functions
-function getInitials(name) {
-  if (!name || typeof name !== 'string') return 'U';
-
-  try {
-    return name
-      .split(' ')
-      .map((part) => part.charAt(0))
-      .join('')
-      .toUpperCase()
-      .substring(0, 2); // Limit to 2 characters
-  } catch (error) {
-    console.error('Error getting initials:', error, { name });
-    return 'U';
-  }
-}
-
 function getUserColor(name) {
-  // Generate consistent color based on user name
   const colors = [
-    '#4361ee', // primary
-    '#3f37c9', // secondary
-    '#4895ef', // accent
-    '#4cc9f0', // success
-    '#f72585', // danger
-    '#7209b7', // purple
-    '#3a0ca3', // indigo
-    '#4cc9f0', // blue
-    '#f72585', // pink
-    '#f8961e', // orange
+    '#4361ee',
+    '#3f37c9',
+    '#4895ef',
+    '#4cc9f0',
+    '#f72585',
+    '#7209b7',
+    '#3a0ca3',
+    '#f8961e',
+    '#fb5607',
+    '#80b918',
   ];
-
-  // Safety check - if name is undefined or null, return default color
-  if (!name || typeof name !== 'string') {
-    return colors[0]; // Return primary color as default
-  }
-
-  // Simple hash function to get consistent color for same name
-  const hash = name.split('').reduce((acc, char) => {
-    return char.charCodeAt(0) + ((acc << 5) - acc);
-  }, 0);
-
+  if (!name || typeof name !== 'string') return colors[0];
+  const hash = name
+    .split('')
+    .reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
   return colors[Math.abs(hash) % colors.length];
-}
-
-function truncateText(text, maxLength = 100) {
-  if (!text || typeof text !== 'string') return '';
-
-  try {
-    return text.length <= maxLength
-      ? text
-      : `${text.substring(0, maxLength)}...`;
-  } catch (error) {
-    console.error('Error truncating text:', error, { text });
-    return '';
-  }
 }

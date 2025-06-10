@@ -1,5 +1,6 @@
 import DicodingStoryApi from '../data/api';
 import CONFIG from '../config';
+import { getInitials } from '../utils/index';
 
 class AppHeader extends HTMLElement {
   connectedCallback() {
@@ -9,17 +10,12 @@ class AppHeader extends HTMLElement {
   }
 
   render() {
-    const isLoggedIn = localStorage.getItem('token') !== null;
+    const isLoggedIn = !!localStorage.getItem('accessToken');
     let user = null;
-
     try {
       const userData = localStorage.getItem('user');
-      if (userData && userData !== 'undefined') {
-        user = JSON.parse(userData);
-      }
-    } catch (error) {
-      console.error('Failed to parse user data:', error);
-      // Remove invalid data
+      if (userData && userData !== 'undefined') user = JSON.parse(userData);
+    } catch {
       localStorage.removeItem('user');
     }
 
@@ -30,19 +26,16 @@ class AppHeader extends HTMLElement {
             <img src="/images/logo.png" alt="Dicoding Story Logo" width="32" height="32">
             Dicoding Story
           </a>
-          
           <nav id="navigation-drawer" class="navigation-drawer" aria-label="Main navigation">
             <ul id="nav-list" class="nav-list">
               <li>
                 <a href="#/" class="${window.location.hash === '#/' ? 'active' : ''}" aria-current="${window.location.hash === '#/' ? 'page' : 'false'}">
-                  <i class="fas fa-home" aria-hidden="true"></i>
-                  Home
+                  <i class="fas fa-home" aria-hidden="true"></i> Home
                 </a>
               </li>
               <li>
                 <a href="#/about" class="${window.location.hash === '#/about' ? 'active' : ''}" aria-current="${window.location.hash === '#/about' ? 'page' : 'false'}">
-                  <i class="fas fa-info-circle" aria-hidden="true"></i>
-                  About
+                  <i class="fas fa-info-circle" aria-hidden="true"></i> About
                 </a>
               </li>
               ${
@@ -50,14 +43,12 @@ class AppHeader extends HTMLElement {
                   ? `
                     <li>
                       <a href="#/stories/add" class="${window.location.hash === '#/stories/add' ? 'active' : ''}" aria-current="${window.location.hash === '#/stories/add' ? 'page' : 'false'}">
-                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
-                        Add Story
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i> Add Story
                       </a>
                     </li>
                     <li>
                       <a href="#/saved" class="${window.location.hash === '#/saved' ? 'active' : ''}" aria-current="${window.location.hash === '#/saved' ? 'page' : 'false'}">
-                        <i class="fas fa-database" aria-hidden="true"></i>
-                        Saved Stories
+                        <i class="fas fa-database" aria-hidden="true"></i> Saved Stories
                       </a>
                     </li>
                     <li class="user-menu">
@@ -86,21 +77,18 @@ class AppHeader extends HTMLElement {
                   : `
                     <li>
                       <a href="#/login" class="${window.location.hash === '#/login' ? 'active' : ''}" aria-current="${window.location.hash === '#/login' ? 'page' : 'false'}">
-                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
-                        Login
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
                       </a>
                     </li>
                     <li>
                       <a href="#/register" class="${window.location.hash === '#/register' ? 'active' : ''}" aria-current="${window.location.hash === '#/register' ? 'page' : 'false'}">
-                        <i class="fas fa-user-plus" aria-hidden="true"></i>
-                        Register
+                        <i class="fas fa-user-plus" aria-hidden="true"></i> Register
                       </a>
                     </li>
                   `
               }
             </ul>
           </nav>
-          
           <button id="drawer-button" class="drawer-button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navigation-drawer">
             <i class="fas fa-bars" aria-hidden="true"></i>
           </button>
@@ -114,20 +102,17 @@ class AppHeader extends HTMLElement {
     this._setupUserMenu();
     this._setupLogoutButton();
     this._setupNotificationToggle();
-    this._setupThemeToggle();
   }
 
   _setupDrawerToggle() {
     const drawerButton = this.querySelector('#drawer-button');
     const navigationDrawer = this.querySelector('#navigation-drawer');
-
     if (!drawerButton || !navigationDrawer) return;
 
     drawerButton.addEventListener('click', (e) => {
       e.stopPropagation();
       const isOpen = navigationDrawer.classList.toggle('open');
       drawerButton.setAttribute('aria-expanded', isOpen);
-
       if (isOpen) {
         const firstNavItem = navigationDrawer.querySelector('a');
         if (firstNavItem) firstNavItem.focus();
@@ -153,7 +138,6 @@ class AppHeader extends HTMLElement {
   _setupUserMenu() {
     const userMenu = this.querySelector('.user-menu');
     if (!userMenu) return;
-
     const userInfo = userMenu.querySelector('.user-info');
     const dropdown = userMenu.querySelector('.user-dropdown');
 
@@ -175,7 +159,6 @@ class AppHeader extends HTMLElement {
         const isExpanded = userInfo.getAttribute('aria-expanded') === 'true';
         userInfo.setAttribute('aria-expanded', !isExpanded);
         dropdown.style.display = isExpanded ? 'none' : 'block';
-
         if (!isExpanded) {
           const firstItem = dropdown.querySelector('button');
           if (firstItem) firstItem.focus();
@@ -184,55 +167,9 @@ class AppHeader extends HTMLElement {
     });
   }
 
-  _setupThemeToggle() {
-    const themeToggle = this.querySelector('#theme-toggle');
-    if (!themeToggle) return;
-
-    // Check current theme
-    const isDark =
-      document.documentElement.getAttribute('data-theme') === 'dark';
-    const themeIcon = themeToggle.querySelector('i');
-    const themeText = themeToggle.querySelector('span');
-
-    if (isDark) {
-      themeIcon.classList.replace('fa-moon', 'fa-sun');
-      themeText.textContent = 'Light Mode';
-    }
-
-    themeToggle.addEventListener('click', () => {
-      const isDarkMode =
-        document.documentElement.getAttribute('data-theme') === 'dark';
-      const newTheme = isDarkMode ? 'light' : 'dark';
-
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-
-      // Update icon and text
-      const icon = themeToggle.querySelector('i');
-      const text = themeToggle.querySelector('span');
-
-      if (newTheme === 'dark') {
-        icon.classList.replace('fa-moon', 'fa-sun');
-        text.textContent = 'Light Mode';
-      } else {
-        icon.classList.replace('fa-sun', 'fa-moon');
-        text.textContent = 'Dark Mode';
-      }
-
-      // Show toast notification
-      if (window.showToast) {
-        window.showToast(
-          `${newTheme === 'dark' ? 'Dark' : 'Light'} mode activated`,
-          'info'
-        );
-      }
-    });
-  }
-
   _setupLogoutButton() {
     const logoutButton = this.querySelector('#logout-button');
     if (!logoutButton) return;
-
     logoutButton.addEventListener('click', () => {
       Swal.fire({
         title: 'Logout',
@@ -246,16 +183,10 @@ class AppHeader extends HTMLElement {
         focusCancel: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          // Unsubscribe from notifications when logging out to clean up
           this._cleanupNotifications();
-
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-
-          if (window.showToast) {
-            window.showToast('Logout successful', 'success');
-          }
-
+          window.showToast && window.showToast('Logout berhasil', 'success');
           window.location.hash = '#/login';
         }
       });
@@ -263,43 +194,27 @@ class AppHeader extends HTMLElement {
   }
 
   async _cleanupNotifications() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      return;
-    }
-
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-
-      if (subscription) {
-        await subscription.unsubscribe();
-        console.log('Cleaned up push subscription on logout');
-      }
-    } catch (error) {
-      console.error('Error cleaning up notifications on logout:', error);
-    }
+      if (subscription) await subscription.unsubscribe();
+    } catch {}
   }
 
   async checkNotificationPermission() {
     const notificationToggle = this.querySelector('#notification-toggle');
     const notificationStatus = this.querySelector('#notification-status');
     const statusIndicator = this.querySelector('.status-indicator');
-
     if (!notificationToggle || !notificationStatus || !statusIndicator) return;
 
     if (Notification.permission === 'granted') {
-      // Check if we actually have an active subscription
       const hasSubscription = await this._checkActiveSubscription();
-
-      if (hasSubscription) {
-        notificationStatus.textContent = 'Disable Notifications';
-        statusIndicator.classList.add('active');
-        notificationToggle.classList.add('enabled');
-      } else {
-        notificationStatus.textContent = 'Enable Notifications';
-        statusIndicator.classList.remove('active');
-        notificationToggle.classList.remove('enabled');
-      }
+      notificationStatus.textContent = hasSubscription
+        ? 'Disable Notifications'
+        : 'Enable Notifications';
+      statusIndicator.classList.toggle('active', hasSubscription);
+      notificationToggle.classList.toggle('enabled', hasSubscription);
     } else if (Notification.permission === 'denied') {
       notificationStatus.textContent = 'Notifications Blocked';
       notificationToggle.disabled = true;
@@ -313,16 +228,13 @@ class AppHeader extends HTMLElement {
   }
 
   async _checkActiveSubscription() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window))
       return false;
-    }
-
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
       return !!subscription;
-    } catch (error) {
-      console.error('Error checking subscription:', error);
+    } catch {
       return false;
     }
   }
@@ -331,13 +243,10 @@ class AppHeader extends HTMLElement {
     const notificationToggle = this.querySelector('#notification-toggle');
     const notificationStatus = this.querySelector('#notification-status');
     const statusIndicator = this.querySelector('.status-indicator');
-
     if (!notificationToggle || !notificationStatus || !statusIndicator) return;
 
     notificationToggle.addEventListener('click', async () => {
       if (notificationToggle.disabled) return;
-
-      // Add loading state
       notificationToggle.disabled = true;
       notificationToggle.classList.add('loading');
       const originalText = notificationStatus.textContent;
@@ -345,25 +254,19 @@ class AppHeader extends HTMLElement {
 
       try {
         const hasSubscription = await this._checkActiveSubscription();
-
         if (hasSubscription) {
-          // User has an active subscription, unsubscribe them
           await this._unsubscribeFromNotifications();
           notificationStatus.textContent = 'Enable Notifications';
           statusIndicator.classList.remove('active');
           notificationToggle.classList.remove('enabled');
         } else {
-          // User doesn't have an active subscription
           if (Notification.permission === 'granted') {
-            // Already has permission, just subscribe
             await this._subscribeToNotifications();
             notificationStatus.textContent = 'Disable Notifications';
             statusIndicator.classList.add('active');
             notificationToggle.classList.add('enabled');
           } else {
-            // Needs to request permission
             const permission = await Notification.requestPermission();
-
             if (permission === 'granted') {
               await this._subscribeToNotifications();
               notificationStatus.textContent = 'Disable Notifications';
@@ -374,25 +277,19 @@ class AppHeader extends HTMLElement {
               notificationToggle.disabled = true;
               notificationToggle.classList.add('blocked');
               statusIndicator.classList.add('blocked');
-
-              if (window.showToast) {
+              window.showToast &&
                 window.showToast(
-                  'Notification permission denied by browser',
+                  'Izin notifikasi ditolak oleh browser',
                   'warning'
                 );
-              }
             }
           }
         }
-      } catch (error) {
-        console.error('Error toggling notifications:', error);
+      } catch {
         notificationStatus.textContent = originalText;
-
-        if (window.showToast) {
-          window.showToast('Failed to toggle notifications', 'error');
-        }
+        window.showToast &&
+          window.showToast('Gagal mengubah status notifikasi', 'error');
       } finally {
-        // Remove loading state
         notificationToggle.disabled = false;
         notificationToggle.classList.remove('loading');
       }
@@ -400,116 +297,58 @@ class AppHeader extends HTMLElement {
   }
 
   async _subscribeToNotifications() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      console.log('Push notifications are not supported');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const token = localStorage.getItem('accessToken');
     if (!token) return;
-
     try {
       const registration = await navigator.serviceWorker.ready;
-
-      // First, unsubscribe from any existing subscriptions
-      // This ensures we start with a clean slate and fixes potential issues
       const existingSubscription =
         await registration.pushManager.getSubscription();
-      if (existingSubscription) {
-        await existingSubscription.unsubscribe();
-      }
-
-      // Create a new subscription
+      if (existingSubscription) await existingSubscription.unsubscribe();
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: CONFIG.VAPID_PUBLIC_KEY,
       });
-
-      const subscriptionData = subscription.toJSON();
-
-      // Create a new object without expirationTime to avoid Bad Request error
-      const { endpoint, keys } = subscriptionData;
-      const cleanSubscriptionData = {
-        endpoint,
-        keys,
-      };
-
+      const { endpoint, keys } = subscription.toJSON();
       await DicodingStoryApi.subscribeNotification({
         token,
-        subscription: cleanSubscriptionData,
+        subscription: { endpoint, keys },
       });
-
-      console.log('Successfully subscribed to notifications');
-      if (window.showToast) {
-        window.showToast('Notifications enabled successfully', 'success');
-      }
-
+      window.showToast &&
+        window.showToast('Notifikasi berhasil diaktifkan', 'success');
       return true;
-    } catch (error) {
-      console.error('Error subscribing to notifications:', error);
-      if (window.showToast) {
-        window.showToast('Failed to enable notifications', 'error');
-      }
+    } catch {
+      window.showToast &&
+        window.showToast('Gagal mengaktifkan notifikasi', 'error');
       return false;
     }
   }
 
   async _unsubscribeFromNotifications() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) return false;
-
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-
       if (subscription) {
-        // Try to unsubscribe from the API
         try {
           await DicodingStoryApi.unsubscribeNotification({
             token,
             endpoint: subscription.endpoint,
           });
-        } catch (apiError) {
-          // Log but don't rethrow API errors - these are common in development environments due to CORS
-          console.warn(
-            'API unsubscribe notification failed (expected in development):',
-            apiError
-          );
-        }
-
-        // Always unsubscribe from the subscription regardless of API result
-        const result = await subscription.unsubscribe();
-        console.log('Successfully unsubscribed from push notification service');
-
-        if (window.showToast) {
-          window.showToast('Notifications disabled successfully', 'info');
-        }
-
-        return result;
+        } catch {}
+        await subscription.unsubscribe();
+        window.showToast &&
+          window.showToast('Notifikasi berhasil dinonaktifkan', 'info');
+        return true;
       }
-      return true; // Already no subscription
-    } catch (error) {
-      console.error('Error unsubscribing from notifications:', error);
-      // In development, suppress toast error for expected CORS failures
-      const isDev =
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-      if (!isDev && window.showToast) {
-        window.showToast('Failed to disable notifications', 'error');
-      }
+      return true;
+    } catch {
+      window.showToast &&
+        window.showToast('Gagal menonaktifkan notifikasi', 'error');
       return false;
     }
   }
 }
 
 customElements.define('app-header', AppHeader);
-
-// Helper function
-function getInitials(name) {
-  if (!name) return 'U';
-  return name
-    .split(' ')
-    .map((part) => part.charAt(0))
-    .join('')
-    .toUpperCase();
-}

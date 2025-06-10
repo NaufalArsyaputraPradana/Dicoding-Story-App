@@ -5,7 +5,6 @@ export function showFormattedDate(date, locale = 'id-ID', options = {}) {
     day: 'numeric',
     ...options,
   };
-
   try {
     return new Date(date).toLocaleDateString(locale, defaultOptions);
   } catch (error) {
@@ -51,12 +50,13 @@ export function validateEmail(email) {
 }
 
 export function getInitials(name) {
-  if (!name) return 'U';
+  if (!name || typeof name !== 'string') return 'U';
   return name
     .split(' ')
     .map((part) => part.charAt(0))
     .join('')
-    .toUpperCase();
+    .toUpperCase()
+    .substring(0, 2); // Maksimal 2 huruf
 }
 
 export function isMobileDevice() {
@@ -66,10 +66,11 @@ export function isMobileDevice() {
 }
 
 export function isOnline() {
-  return true;
+  return navigator.onLine;
 }
 
 export function capitalizeFirstLetter(string) {
+  if (!string) return '';
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -85,14 +86,56 @@ export function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+/**
+ * Animasi utilitas untuk elemen (gunakan animate.css atau custom class)
+ * @param {HTMLElement} element
+ * @param {string} animation
+ * @param {number} duration
+ */
 export function animateElement(element, animation, duration = 300) {
   return new Promise((resolve) => {
     const animationClass = `animate-${animation}`;
     element.classList.add(animationClass);
-
     setTimeout(() => {
       element.classList.remove(animationClass);
       resolve();
     }, duration);
   });
+}
+
+/**
+ * IMPROVISASI: Utility untuk memformat waktu relatif (misal: "2 jam lalu")
+ */
+export function formatRelativeTime(date, locale = 'id-ID') {
+  try {
+    const now = new Date();
+    const then = new Date(date);
+    const diff = now - then;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days} hari lalu`;
+    if (hours > 0) return `${hours} jam lalu`;
+    if (minutes > 0) return `${minutes} menit lalu`;
+    if (seconds > 10) return `${seconds} detik lalu`;
+    return 'Baru saja';
+  } catch (error) {
+    return date || '';
+  }
+}
+
+/**
+ * IMPROVISASI: Utility untuk copy ke clipboard dengan feedback
+ */
+export async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    window.showToast?.('Teks berhasil disalin!', 'success');
+    return true;
+  } catch (error) {
+    window.showToast?.('Gagal menyalin teks', 'error');
+    return false;
+  }
 }
