@@ -129,9 +129,6 @@ export default class StoryDetailPage {
               </div>
             </div>
             <div class="story-actions-top">
-              <button id="favorite-button" class="icon-button ${isFavorite ? 'active' : ''}" aria-label="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
-                <i class="fas fa-heart" aria-hidden="true"></i>
-              </button>
               <button id="share-button" class="icon-button hidden" aria-label="Share this story">
                 <i class="fas fa-share-alt" aria-hidden="true"></i>
               </button>
@@ -164,9 +161,6 @@ export default class StoryDetailPage {
               <i class="fas fa-arrow-left" aria-hidden="true"></i>
               Back to Stories
             </a>
-            <button id="save-story-button" class="btn btn-primary">
-              <i class="fas fa-bookmark"></i> Simpan ke Favorit
-            </button>
             <a href="#/stories/add" class="action-button" aria-label="Share your own story">
               <i class="fas fa-plus-circle"></i>
               Share Your Story
